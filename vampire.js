@@ -37,41 +37,54 @@ class Vampire {
   isMoreSeniorThan(vampire) {
     // return true if this vamp is vampire's boss OR if this vamp is their bosses boss
     if ((this === vampire.creator) || (this.offspring.includes(vampire.creator))) {
-      return true
+      return true;
     }
     return false;
-  }
-
-  // Returns the vampire object with that name, or null if no vampire exists with that name
-  vampireWithName(name) {
-
-  }
-
-  // Returns the total number of vampires that exist
-  get totalDescendents() {
-
-  }
-
-  // Returns an array of all the vampires that were converted after 1980
-  get allMillennialVampires() {
-
   }
 
   /** Tree traversal methods **/
 
   // Returns the vampire object with that name, or null if no vampire exists with that name
   vampireWithName(name) {
-    
+    // check if current vampire has the name ...
+    if (this.name === name) {
+      return this;
+    }
+
+    // ... if not, check offspring
+    for (let child of this.offspring) {
+      let currentVamp = child.vampireWithName(name); // plug in function for each offspring
+
+      if (currentVamp) {
+        return currentVamp;
+      }
+    }
+    return null;
   }
 
   // Returns the total number of vampires that exist
   get totalDescendents() {
-    
+    let totalDescendents = 0;
+    // depth first traversal calculate total employees
+    for (let descendant of this.offspring) {
+      totalDescendents += descendant.totalDescendents + 1;
+    }
+    return totalDescendents;
   }
 
   // Returns an array of all the vampires that were converted after 1980
   get allMillennialVampires() {
-    
+    let millenials = [];
+
+    if (this.yearConverted >= 1980) {
+      millenials.push(this);
+    }
+
+    for (const child of this.offspring) {
+      // const millenialOffspring = child.allMillennialVampires();
+      millenials = millenials.concat(child.allMillennialVampires);
+    }
+    return millenials;
   }
 
   /** Stretch **/
@@ -81,9 +94,9 @@ class Vampire {
   // For example:
   // * when comparing Ansel and Sarah, Ansel is the closest common anscestor.
   // * when comparing Ansel and Andrew, Ansel is the closest common anscestor.
-  closestCommonAncestor(vampire) {
+  // closestCommonAncestor(vampire) {
 
-  }
+  // }
 }
 
 module.exports = Vampire;
